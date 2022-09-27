@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "641150087939-jriae6kpgfhhfcvsnbuu6bg74g3v4lel.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.m19.spotbuy.sopt_buy",
+            "certificate_hash": "3882b51531b8c7fc2f885ce286f787dd98bbca3e"
+          }
+        },
+        {
           "client_id": "641150087939-4idus9l4gl3c010ao0hu7cjjdheeuf4j.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,13 @@
             {
               "client_id": "641150087939-4idus9l4gl3c010ao0hu7cjjdheeuf4j.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "641150087939-ri84pmmmr8gaqa0a9jb9dqg7gike1b5i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.m19.spotbuy.soptBuy"
+              }
             }
           ]
         }
