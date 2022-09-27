@@ -65,6 +65,7 @@ class DefaultFirebaseOptions {
     projectId: 'spot-rental-pro',
     databaseURL: 'https://spot-rental-pro-default-rtdb.firebaseio.com',
     storageBucket: 'spot-rental-pro.appspot.com',
+    androidClientId: '641150087939-jriae6kpgfhhfcvsnbuu6bg74g3v4lel.apps.googleusercontent.com',
     iosClientId: '641150087939-ri84pmmmr8gaqa0a9jb9dqg7gike1b5i.apps.googleusercontent.com',
     iosBundleId: 'com.m19.spotbuy.soptBuy',
   );
