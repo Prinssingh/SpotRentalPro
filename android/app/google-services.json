@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "641150087939",
+    "firebase_url": "https://spot-rental-pro-default-rtdb.firebaseio.com",
+    "project_id": "spot-rental-pro",
+    "storage_bucket": "spot-rental-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641150087939:android:c161ca93e9f108e0deef36",
+        "android_client_info": {
+          "package_name": "com.m19.spotbuy.sopt_buy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641150087939-4idus9l4gl3c010ao0hu7cjjdheeuf4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPQIkOBpnEKf-nVwtngtzguuLhmySF5xk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641150087939-4idus9l4gl3c010ao0hu7cjjdheeuf4j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

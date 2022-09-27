@@ -87,10 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                  decoration: BoxDecoration(color: SpotColors.colorPrimary),
                  accountName: Text(
-                   "Abhishek Mishra",
+                   "Prins Singh",
                    style: TextStyle(fontSize: 18),
                  ),
-                 accountEmail: Text("abhishekm977@gmail.com"),
+                 accountEmail: Text("prinssingh7448@gmail.com"),
                  currentAccountPictureSize: Size.square(50),
                  currentAccountPicture: CircleAvatar(
                    backgroundColor: SpotColors.colorPrimary,

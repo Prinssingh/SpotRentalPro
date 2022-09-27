@@ -1,9 +1,18 @@
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/SplashScreen.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  await Firebase.initializeApp(
+         options: DefaultFirebaseOptions.currentPlatform,
+       );
+
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
