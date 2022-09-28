@@ -1,25 +1,39 @@
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:location/location.dart';
-import 'package:spot_buy/Utils/SpotColors.dart';
+import 'package:spot_buy/Models/GoogleMapMarkerModel.dart';
 
+// ignore: must_be_immutable
 class GoogleMapPage extends StatefulWidget {
-  const GoogleMapPage({Key? key}) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
+  Set<GoogleMapMarkerModel> googleMapMarkers;
+
+   GoogleMapPage({Key? key,required this.googleMapMarkers}) : super(key: key);
+
 
 
   @override
-  State<GoogleMapPage> createState() => _GoogleMapPageState();
+  // ignore: no_logic_in_create_state
+  State<GoogleMapPage> createState() => _GoogleMapPageState(googleMapMarkers);
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  // final LatLng _initialcameraposition = const LatLng(24.527579, 81.109152);
-  // late GoogleMapController _controller;
-  // Location _location = Location();
-  //
-  // final CameraPosition initCamPosition = CameraPosition(target: _initialcameraposition,zoom: 10);
-  //
+
+
+  GoogleMapController? mapController; //contrller for Google map
+  LatLng showLocation =
+      const LatLng(24.527579, 81.109152);
+
+  Set<Marker> markers ={};
+
+  // ignore: prefer_typing_uninitialized_variables
+  var googleMapMarkers;
+
+  _GoogleMapPageState(this.googleMapMarkers){
+    print("Markers"+googleMapMarkers.toString());
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,30 +44,60 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    return  Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: SpotColors.colorYellow,
-        child:Stack(
-          children: const [
-            Text("data"),
-
-          ],
-        )
-
-          );
+    return GoogleMap(
+      zoomGesturesEnabled: true,
+      initialCameraPosition: CameraPosition(
+        target: showLocation,
+        zoom: 10.0,
+      ),
+      markers: markers,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      mapType: MapType.normal,
+      onMapCreated: (controller) { //method called when map is created
+        setState(() {
+          mapController = controller;
+        });
+      },
+    );
   }
 
-  //
-  // void _onMapCreated(GoogleMapController _cntlr)
-  // {
-  //   _controller = _cntlr;
-  //   _location.onLocationChanged.listen((l) {
-  //     _controller.animateCamera(
-  //       CameraUpdate.newCameraPosition(
-  //         CameraPosition(target: LatLng(l.latitude, l.longitude),zoom: 10),
-  //       ),
-  //     );
-  //   });
-  // }
+  @override
+  void initState() {
+    if(googleMapMarkers.isEmpty){
+      markers.add(Marker(
+        //add marker on google map
+        markerId: MarkerId(showLocation.toString()),
+        position: showLocation, //position of marker
+        infoWindow: const InfoWindow(
+          //popup info
+          title: 'Current Location',
+          snippet: 'My Current location',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+
+      ));
+
+    }
+    else{
+      markers.clear();
+      for( GoogleMapMarkerModel marker in googleMapMarkers ){
+
+        markers.add(Marker(
+          //add marker on google map
+          markerId: MarkerId(marker.id.toString()),
+          position: marker.position, //position of marker
+          infoWindow:  InfoWindow(
+            //popup info
+            title: marker.title,
+            snippet: marker.subTitle,
+          ),
+          icon: marker.icon, //Icon for Marker
+
+        ));
+      }
+    }
+    super.initState();
+  }
+
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:spot_buy/Models/GoogleMapMarkerModel.dart';
 import 'package:spot_buy/Screens/DrawerScreens/FavoritesScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/FriendsScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/NotificationsScreen.dart';
@@ -16,15 +18,26 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+
+
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   int pageIndex = 0;
+  static Set<GoogleMapMarkerModel> markerModels={
+    GoogleMapMarkerModel("Charging", "Charging Point 1", "charging", const LatLng(24.5200, 81.100)),
+    GoogleMapMarkerModel("Charging", "Charging Point 2", "charging", const LatLng(24.525, 81.15)),
+    GoogleMapMarkerModel("Charging", "Charging Point 3", "charging", const LatLng(24.5255, 81.155)),
+    GoogleMapMarkerModel("Charging", "Charging Point 4", "charging", const LatLng(24.526, 81.156)),
+    GoogleMapMarkerModel("Charging", "Charging Point 5", "charging", const LatLng(24.5265, 81.1565))
 
-  final pages = [
-    const GoogleMapPage(),
-    const SearchPage(),
-    const SettingPage(),
+  };
+
+
+  var pages = [
+     GoogleMapPage(googleMapMarkers: markerModels),
+     const SearchPage(),
+     const SettingPage(),
   ];
 
   String get text => "Test Share";
@@ -32,10 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
   get subject =>"Share The App link";
 
 
+
   @override
   Widget build(BuildContext context) {
 
-
+    setChargingMarkers();
     return WillPopScope( onWillPop: showExitPopup,
     child: Scaffold(
         extendBody: true,
@@ -239,12 +253,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
               //Search
               IconButton(
-                  enableFeedback: false,
                   onPressed: () {
-                    print("Search pressed 00");
                     setState(() {
                       pageIndex = 1;
-                      print("Search pressed");
+
                     });
                   },
                   icon: const Icon(Icons.search_outlined,
@@ -296,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: const CircleBorder(),
           //shape of button
           children: [
+            // Charging
             SpeedDialChild(
               child: const Icon(Icons.charging_station),
               labelWidget: Container(
@@ -311,9 +324,16 @@ class _HomeScreenState extends State<HomeScreen> {
               foregroundColor: Colors.white,
               label: 'Charging',
               labelStyle: const TextStyle(fontSize: 16.0),
-              onTap: () => print('Charging'),
+              onTap: () {
+                setState(() {
+                  setChargingMarkers();
+                  pageIndex=0;
+                });
+              },
               onLongPress: () => print('Charging FIRST CHILD LONG PRESS'),
             ),
+
+            //Park
             SpeedDialChild(
               child: const Icon(Icons.local_parking),
               backgroundColor: SpotColors.colorBlue,
@@ -332,6 +352,8 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () => print('Park SECOND CHILD'),
               onLongPress: () => print('Park SECOND CHILD LONG PRESS'),
             ),
+
+            //Fuel
             SpeedDialChild(
               child: const Icon(Icons.add_business_outlined),
               labelWidget: Container(
@@ -347,7 +369,16 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: SpotColors.colorOrange,
               label: "Fuel",
               labelStyle: const TextStyle(fontSize: 18.0),
+              onTap: () {
+                pageIndex=1;
+                setChargingMarkers();
+              },
+
+
+
+
             ),
+
             SpeedDialChild(
               child: const Icon(Icons.two_wheeler_outlined),
               backgroundColor: SpotColors.colorYellow,
@@ -407,4 +438,46 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     )??false; //if showDialouge had returned null, then return false
   }
+
+
+  void setChargingMarkers(){
+    markerModels.clear();
+    markerModels.add(
+      GoogleMapMarkerModel("Charging", "Charging Point 1", "charging", const LatLng(24.5200, 81.100)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Charging", "Charging Point 2", "charging", const LatLng(24.525, 81.15)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Charging", "Charging Point 3", "charging", const LatLng(24.5255, 81.155)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Charging", "Charging Point 4", "charging", const LatLng(24.526, 81.156)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Charging", "Charging Point 5", "charging", const LatLng(24.5265, 81.1565)));
+
+  }
+
+ void setFuelMarkers(){
+   markerModels.clear();
+    markerModels.add(
+      GoogleMapMarkerModel("fuel", "fuel Point 1", "fuel", const LatLng(24.5200, 81.100)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("fuel", "fuel Point 2", "fuel", const LatLng(24.525, 81.15)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("fuel", "fuel Point 3", "fuel", const LatLng(24.5255, 81.155)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("fuel", "fuel Point 4", "fuel", const LatLng(24.526, 81.156)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("fuel", "fuel Point 5", "fuel", const LatLng(24.5265, 81.1565)));
+
+  }
+
+
+
 }

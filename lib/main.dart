@@ -7,10 +7,10 @@ import 'package:spot_buy/Utils/SpotColors.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runApp(const MyApp());
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
 }
 
