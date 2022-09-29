@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:spot_buy/Models/GoogleMapMarkerModel.dart';
+
 
 // ignore: must_be_immutable
 class GoogleMapPage extends StatefulWidget {
@@ -27,12 +29,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   Set<Marker> markers ={};
 
-  // ignore: prefer_typing_uninitialized_variables
-  var googleMapMarkers;
+  Set<GoogleMapMarkerModel> googleMapMarkers;
+  _GoogleMapPageState(this.googleMapMarkers);
 
-  _GoogleMapPageState(this.googleMapMarkers){
-    print("Markers"+googleMapMarkers.toString());
-  }
+
 
 
   @override
@@ -63,21 +63,23 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   @override
-  void initState() {
+  void initState()  {
+
     if(googleMapMarkers.isEmpty){
-      markers.add(Marker(
-        //add marker on google map
-        markerId: MarkerId(showLocation.toString()),
-        position: showLocation, //position of marker
-        infoWindow: const InfoWindow(
-          //popup info
-          title: 'Current Location',
-          snippet: 'My Current location',
-        ),
-        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-
-      ));
-
+      getLocation();
+      //
+      // markers.add(Marker(
+      //   //add marker on google map
+      //   markerId: MarkerId(showLocation.toString()),
+      //   position: showLocation, //position of marker
+      //   infoWindow: const InfoWindow(
+      //     //popup info
+      //     title: 'Current Location',
+      //     snippet: 'My Current location',
+      //   ),
+      //   icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      //
+      // ));
     }
     else{
       markers.clear();
@@ -92,12 +94,34 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             title: marker.title,
             snippet: marker.subTitle,
           ),
-          icon: marker.icon, //Icon for Marker
+          icon: marker.icon,//Icon for Marker
+          onTap: (){}
 
         ));
       }
     }
     super.initState();
   }
+
+  Location currentLocation = Location();
+  void getLocation() async{
+    var location = await currentLocation.getLocation();
+    currentLocation.onLocationChanged.listen((LocationData loc){
+
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(loc.latitude ?? 0.0,loc.longitude?? 0.0),
+        zoom: 12.0,
+      )));
+      print(loc.latitude);
+      print(loc.longitude);
+      setState(() {
+        markers.add(Marker(markerId: MarkerId('Home'),
+            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0)
+        ));
+      });
+    });
+  }
+
+
 
 }

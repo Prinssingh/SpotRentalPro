@@ -18,23 +18,18 @@ class GoogleMapMarkerModel {
 
     switch(category){
       case "charging":
-        // BitmapDescriptor.fromAssetImage(
-        //     const ImageConfiguration(size: Size(48, 48)), "assets/images/charging_map_pin.png")
-        //     .then((onValue) {
-        //   icon = onValue;
-        // });
-
         icon=  BitmapDescriptor.defaultMarker ;
          break;
 
       case "fuel":
-        BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(48, 48)), "assets/images/fuel_map_pin.png")
-            .then((onValue) {
-          icon = onValue;
-        });
-        icon= BitmapDescriptor.fromAssetImage( const ImageConfiguration(size: Size(48, 48)), "assets/images/fuel_map_pin.png") as BitmapDescriptor ;
+        icon = BitmapDescriptor.defaultMarker;
         break;
+
+
+      default :
+        icon = BitmapDescriptor.defaultMarker;
+        break;
+
     }
   }
 

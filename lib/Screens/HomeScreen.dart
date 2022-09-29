@@ -24,20 +24,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int pageIndex = 0;
-  static Set<GoogleMapMarkerModel> markerModels={
-    GoogleMapMarkerModel("Charging", "Charging Point 1", "charging", const LatLng(24.5200, 81.100)),
-    GoogleMapMarkerModel("Charging", "Charging Point 2", "charging", const LatLng(24.525, 81.15)),
-    GoogleMapMarkerModel("Charging", "Charging Point 3", "charging", const LatLng(24.5255, 81.155)),
-    GoogleMapMarkerModel("Charging", "Charging Point 4", "charging", const LatLng(24.526, 81.156)),
-    GoogleMapMarkerModel("Charging", "Charging Point 5", "charging", const LatLng(24.5265, 81.1565))
-
-  };
+  static Set<GoogleMapMarkerModel> markerModels={};
 
 
   var pages = [
+
      GoogleMapPage(googleMapMarkers: markerModels),
      const SearchPage(),
      const SettingPage(),
+    const SettingPage()
   ];
 
   String get text => "Test Share";
@@ -49,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    setChargingMarkers();
     return WillPopScope( onWillPop: showExitPopup,
     child: Scaffold(
         extendBody: true,
@@ -308,7 +302,8 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: const CircleBorder(),
           //shape of button
           children: [
-            // Charging
+
+            //Charging
             SpeedDialChild(
               child: const Icon(Icons.charging_station),
               labelWidget: Container(
@@ -328,6 +323,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 setState(() {
                   setChargingMarkers();
                   pageIndex=0;
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (Route<dynamic> route) => false,
+                  );
+
                 });
               },
               onLongPress: () => print('Charging FIRST CHILD LONG PRESS'),
@@ -349,7 +350,19 @@ class _HomeScreenState extends State<HomeScreen> {
               foregroundColor: Colors.white,
               label: 'Park',
               labelStyle: const TextStyle(fontSize: 18.0),
-              onTap: () => print('Park SECOND CHILD'),
+              onTap: () {
+
+                setState(() {
+                  setParkMarkers();
+                  pageIndex=0;
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (Route<dynamic> route) => false,
+                  );
+
+                });
+              },
               onLongPress: () => print('Park SECOND CHILD LONG PRESS'),
             ),
 
@@ -370,15 +383,22 @@ class _HomeScreenState extends State<HomeScreen> {
               label: "Fuel",
               labelStyle: const TextStyle(fontSize: 18.0),
               onTap: () {
-                pageIndex=1;
-                setChargingMarkers();
+                setState(() {
+                  setFuelMarkers();
+                  pageIndex=0;
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (Route<dynamic> route) => false,
+                  );
+
+                });
               },
-
-
 
 
             ),
 
+            //Flat Tire
             SpeedDialChild(
               child: const Icon(Icons.two_wheeler_outlined),
               backgroundColor: SpotColors.colorYellow,
@@ -394,7 +414,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       textAlign: TextAlign.end)),
               label: 'Flat tire',
               labelStyle: const TextStyle(fontSize: 18.0),
-              onTap: () => print('Park SECOND CHILD'),
+              onTap: (){
+
+                setState(() {
+                  setFlatTireMarkers();
+                  pageIndex=0;
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (Route<dynamic> route) => false,
+                  );
+
+                });
+              },
               onLongPress: () => print('Park SECOND CHILD LONG PRESS'),
             ),
           ],
@@ -459,7 +491,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
- void setFuelMarkers(){
+  void setFuelMarkers(){
    markerModels.clear();
     markerModels.add(
       GoogleMapMarkerModel("fuel", "fuel Point 1", "fuel", const LatLng(24.5200, 81.100)));
@@ -475,6 +507,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
     markerModels.add(
       GoogleMapMarkerModel("fuel", "fuel Point 5", "fuel", const LatLng(24.5265, 81.1565)));
+
+  }
+
+  void setParkMarkers(){
+   markerModels.clear();
+    markerModels.add(
+      GoogleMapMarkerModel("Parking", "Parking Point 1", "Parking", const LatLng(24.5200, 81.100)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Parking", "Parking Point 2", "Parking", const LatLng(24.525, 81.15)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Parking", "Parking Point 3", "Parking", const LatLng(24.5255, 81.155)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Parking", "Parking Point 4", "Parking", const LatLng(24.526, 81.15655)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("Parking", "Parking Point 5", "Parking", const LatLng(24.5265, 81.15650)));
+
+  }
+
+  void setFlatTireMarkers(){
+   markerModels.clear();
+    markerModels.add(
+      GoogleMapMarkerModel("FlatTire", "FlatTire Point 1", "FlatTire", const LatLng(24.5200, 81.100)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("FlatTire", "FlatTire Point 2", "FlatTire", const LatLng(24.525, 81.15)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("FlatTire", "FlatTire Point 3", "FlatTire", const LatLng(24.5255, 81.155)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("FlatTire", "FlatTire Point 4", "FlatTire", const LatLng(24.526, 81.15655)));
+
+    markerModels.add(
+      GoogleMapMarkerModel("FlatTire", "FlatTire Point 5", "FlatTire", const LatLng(24.5265, 81.15650)));
 
   }
 
