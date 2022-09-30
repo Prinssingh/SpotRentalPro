@@ -24,13 +24,14 @@ class _IntroScreen extends State<IntroScreen>{
 
     //this is a page decoration for intro screen
     PageDecoration pageDecoration = const PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0,
+      titleTextStyle: TextStyle(fontSize: 24.0,
           fontWeight: FontWeight.w700,
           color:SpotColors.colorPrimary
-      ), //tile font size, weight and color
-      bodyTextStyle:TextStyle(fontSize: 19.0, color:Colors.black),
+      ),
+      titlePadding: EdgeInsets.only(top: 20),//tile font size, weight and color
+      bodyTextStyle:TextStyle(fontSize: 20.0, color:SpotColors.colorPrimary),
       //body text size and color
-      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      descriptionPadding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 16.0),
       //decription padding
       imagePadding: EdgeInsets.all(20), //image padding
       boxDecoration:BoxDecoration(
@@ -53,21 +54,21 @@ class _IntroScreen extends State<IntroScreen>{
       //main background of screen
       pages: [ //set your page view here
         PageViewModel(
-          title: "Page 1",
-          body: "Instead of having to buy an entire share, invest any amount you want.",
-          image: introImage('assets/images/logo.png'),
+          title: "Let's Get Started",
+          body: "It will let the user to know the nearest .\nlocation from where they can get the vehicle recharged.",
+          image: introImage('assets/images/IntroScreen/ev.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Page 2",
-          body: "Instead of having to buy an entire share, invest any amount you want.",
-          image: introImage('assets/images/logo.png'),
+          title: "Let's Get Started",
+          body: "Recognize the regarding nearest location, \nwherever they'll park their vehicles.",
+          image: introImage('assets/images/IntroScreen/parke.jpeg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Page 3",
-          body: "Instead of having to buy an entire share, invest any amount you want.",
-          image: introImage('assets/images/logo.png'),
+          title: "Let's Get Started",
+          body: "it'll let the user comprehend their \nfavorite fuel station<br>and their name.",
+          image: introImage('assets/images/IntroScreen/garden.jpeg'),
           decoration: pageDecoration,
         ),
 

@@ -7,9 +7,9 @@ import 'package:spot_buy/Screens/DrawerScreens/FriendsScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/NotificationsScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/PoliciesScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/ProfileScreen.dart';
-import 'package:spot_buy/Screens/GoogleMapPage.dart';
-import 'package:spot_buy/Screens/SearchPage.dart';
-import 'package:spot_buy/Screens/SettingPage.dart';
+import 'package:spot_buy/Screens/BottomNavScreens/GoogleMapPage.dart';
+import 'package:spot_buy/Screens/BottomNavScreens/SearchPage.dart';
+import 'package:spot_buy/Screens/BottomNavScreens/SettingPage.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
 
 import 'package:share/share.dart';
@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope( onWillPop: showExitPopup,
     child: Scaffold(
         extendBody: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Row(

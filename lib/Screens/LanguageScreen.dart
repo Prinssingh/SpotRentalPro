@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/Login.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
 
@@ -77,40 +77,47 @@ class LanguageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     //final TextStyle textStyle = Theme.of(context).textTheme.display1;
     return InkWell(
-      onTap: () {
-        print("Clicked to "+languageItem.name);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context){
-              return  Login();
-            }
-            ), (Route<dynamic> route) => false);
-      },
-      child: Card(
-          elevation: 4,
-          color: SpotColors.colorGrayLight,
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(languageItem.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: SpotColors.colorPrimary)),
-                Text("( " + languageItem.language + " )",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black))
-              ],
-            ),
-          )
+        onTap: () {
+          print("Clicked to " + languageItem.name);
+          // TODO - Localization
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) {
+            return const Login();
+          }), (Route<dynamic> route) => false);
+        },
+        child: SizedBox(
+          height: 180,
+          width: 200,
 
-
-      ),
-    );
-
+          child: Card(
+              elevation: 8.0,
+              color: const Color.fromARGB(255, 232, 235, 237),
+              shadowColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(languageItem.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: SpotColors.colorPrimary,
+                        )),
+                    Text(languageItem.name =="Others" ?"":"( " + languageItem.language + " )",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black))
+                  ],
+                ),
+              )
+          ),
+        ));
   }
 }
