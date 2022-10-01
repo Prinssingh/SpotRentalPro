@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +15,8 @@ import 'package:spot_buy/Utils/SpotColors.dart';
 
 import 'package:share/share.dart';
 
+import 'Login.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
@@ -24,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int pageIndex = 0;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   static Set<GoogleMapMarkerModel> markerModels={};
 
 
@@ -49,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         extendBody: true,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           title: Row(
             children: const [
               Expanded(child: Text("Spot park pro")),
@@ -113,8 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
              ),),
               ListTile(
-                leading: const Icon(Icons.favorite),
-                title: const Text('favorites'),
+                leading: const Icon(Icons.nature_rounded),
+                title: const Text('Flat tire'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).pushAndRemoveUntil(
@@ -126,8 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.people),
-                title: const Text('Friends'),
+                leading: const Icon(Icons.local_gas_station),
+                title: const Text('Fuel'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).pushAndRemoveUntil(
@@ -139,6 +143,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.park),
+                title: const Text('Park'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context){
+                        return const FriendsScreen() ;
+                      }
+                      ), (Route<dynamic> route) => true);
+
+
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.charging_station),
+                title: const Text('Charing'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context){
+                        return const FriendsScreen() ;
+                      }
+                      ), (Route<dynamic> route) => true);
+
+
+                },
+              ),
+              const Divider(),
               ListTile(
                 leading: const Icon(Icons.share),
                 title: const Text('Share'),
@@ -172,7 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              const Divider(),
               ListTile(
                 leading: const Icon(Icons.settings),
                 title: const Text('settings'),
@@ -188,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.description),
-                title: const Text('polices'),
+                title: const Text('Privacy Policy'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).pushAndRemoveUntil(
@@ -201,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.exit_to_app),
-                title: const Text('Exit'),
+                title: const Text('Logout'),
                 onTap: (){
                   Navigator.pop(context);
                   showExitPopup();},
@@ -452,8 +484,8 @@ class _HomeScreenState extends State<HomeScreen> {
       //the return value will be from "Yes" or "No" options
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Exit App'),
-        content: const Text('Do you want to exit an App?'),
+        title: const Text('Logout App'),
+        content: const Text('Do you want to Logout ?'),
         actions:[
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -462,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => logout(),
             //return true when click on "Yes"
             child:const Text('Yes'),
           ),
@@ -470,6 +502,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     )??false; //if showDialouge had returned null, then return false
+  }
+
+  Future<void> logout() async {
+    print("logout success");
+    await _auth.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Login()));
   }
 
 

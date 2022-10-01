@@ -1,8 +1,13 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/HomeScreen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
-  const OtpVerificationScreen({Key? key}) : super(key: key);
+  final String verificationID;
+  const OtpVerificationScreen({Key? key, required this.verificationID}) : super(key: key);
 
   @override
   _OtpVerificationState createState() => _OtpVerificationState();
@@ -13,6 +18,26 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
   TextEditingController otpController = TextEditingController();
  // FirebaseAuth _auth = FirebaseAuth.instance;
   String verificationID = "";
+
+  void verifyOTP() async{
+
+    String otp = otpController.text.trim();
+
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: widget.verificationID, smsCode: otp);
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      if(userCredential.user!= null){
+        Navigator.push(context, CupertinoPageRoute
+          (builder: (context) => HomeScreen()
+        ));
+      }
+    } on FirebaseAuthException catch(ex){
+      log(ex.code.toString());
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +72,12 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: otpController,
+              maxLength: 6,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
+                counterText: "",
                   border: OutlineInputBorder(
+
                       borderRadius: BorderRadius.circular(12)),
                   hintText: "Enter Your OTP"),
             ),
@@ -60,11 +88,12 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
         ),
         ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context){
-                    return  const HomeScreen();
-                  }
-                  ), (Route<dynamic> route) => false);
+              verifyOTP();
+              // Navigator.of(context).pushAndRemoveUntil(
+              //     MaterialPageRoute(builder: (context){
+              //       return  const HomeScreen();
+              //     }
+              //     ), (Route<dynamic> route) => false);
             },
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

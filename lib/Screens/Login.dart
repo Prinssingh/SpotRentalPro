@@ -1,5 +1,11 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/OtpVerificationScreen.dart';
+
+import 'HomeScreen.dart';
 
 enum LoginScreen { SHOW_MOBILE_ENTER_WIDGET, SHOW_OTP_FORM_WIDGET }
 
@@ -14,12 +20,34 @@ class _LoginState extends State<Login> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   LoginScreen currentState = LoginScreen.SHOW_MOBILE_ENTER_WIDGET;
- // FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   String verificationID = "";
 
 
+  void sendOTP() async {
+    String phone = "+91" + phoneController.text.trim();
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
+        codeSent: (verificationID,resendToken) {
+          Navigator.push(context, CupertinoPageRoute
+            (builder: (context) => OtpVerificationScreen(
+              verificationID : verificationID
+          )
+          ));
+        },
+        verificationCompleted: (credentials) {},
+        verificationFailed: (ex){
+          log(ex.code.toString());
+        },
+        codeAutoRetrievalTimeout: (verificationID){},
+      timeout: Duration(seconds: 30)
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,11 +92,12 @@ class _LoginState extends State<Login> {
           ),
           ElevatedButton(
               onPressed: (){
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){
-                      return  const OtpVerificationScreen();
-                    }
-                    ), (Route<dynamic> route) => false);
+                sendOTP();
+                // Navigator.of(context).pushAndRemoveUntil(
+                //     MaterialPageRoute(builder: (context){
+                //       return  sendOTP();
+                //     }
+                //     ), (Route<dynamic> route) => false);
               },
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

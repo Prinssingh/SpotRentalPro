@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:spot_buy/Screens/LanguageScreen.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
+
+import 'HomeScreen.dart';
 
 
 //import on board me dependency
@@ -100,7 +103,9 @@ class _IntroScreen extends State<IntroScreen>{
   void goHomepage(context){
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context){
-          return const LanguageScreen();
+          return MaterialApp(
+              home: (FirebaseAuth.instance.currentUser != null) ? HomeScreen() : LanguageScreen(),
+          );
         }
         ), (Route<dynamic> route) => false);
     //Navigate to home page and remove the intro screen history
