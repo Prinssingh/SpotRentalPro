@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 
 class SpotColors{
   static const Color colorPrimary = Color(0xff2E3C5D);
-  static Color colorGreen =const Color(0xff67CD00);
-  static Color colorBlue =const Color(0xff7094E8);
-  static Color colorOrange =const Color(0xffE97E00);
-  static Color colorYellow =const Color(0xffFFE142);
+  static const Color colorGreen =Color(0xff67CD00);
+  static const Color colorBlue = Color(0xff7094E8);
+  static const Color colorOrange = Color(0xffE97E00);
+  static const Color colorYellow = Color(0xffFFE142);
 
-  static Color colorGrayLight =const Color(0xffd7d4d4);
+  static const Color colorGrayLight = Color(0xffd7d4d4);
+
+//Colors For profile
+  static const Color colorProfileBackground =  Color(0xFFDAD9F4);
+  static const Color colorTextField =  Color(0xFF39393D);
+  static const Color colorGrayLight2 = Color(0xffc4c3c3);
 
 
   static MaterialColor getPrimaryColor(){

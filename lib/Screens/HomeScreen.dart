@@ -1,20 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:spot_buy/Models/GoogleMapMarkerModel.dart';
 import 'package:spot_buy/Screens/DrawerScreens/FavoritesScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/FriendsScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/NotificationsScreen.dart';
 import 'package:spot_buy/Screens/DrawerScreens/PoliciesScreen.dart';
-import 'package:spot_buy/Screens/DrawerScreens/ProfileScreen.dart';
+import 'package:spot_buy/Screens/DrawerScreens/Profile/ProfileScreen.dart';
 import 'package:spot_buy/Screens/BottomNavScreens/GoogleMapPage.dart';
 import 'package:spot_buy/Screens/BottomNavScreens/SearchPage.dart';
 import 'package:spot_buy/Screens/BottomNavScreens/SettingPage.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
 
 import 'package:share/share.dart';
-
+import 'package:spot_buy/Utils/SpotSharedPref.dart';
 import 'Login.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,17 +28,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //TODO- Needs Raw Data
+
+
+
   int pageIndex = 0;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   static Set<GoogleMapMarkerModel> markerModels={};
+  String UserName="User Name";
+  String UserEmail="useremail@gmail.com";
+  String CurrentLocation ="Bhopal";
+
+
 
 
   var pages = [
-
      GoogleMapPage(googleMapMarkers: markerModels),
      const SearchPage(),
      const SettingPage(),
-    const SettingPage()
+
   ];
 
   String get text => "Test Share";
@@ -47,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setInitState();
 
     return WillPopScope( onWillPop: showExitPopup,
     child: Scaffold(
@@ -55,10 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           title: Row(
-            children: const [
-              Expanded(child: Text("Spot park pro")),
-              Icon(Icons.location_on),
-              Text("Bhopal", textAlign: TextAlign.end)
+            children:  [
+              const Expanded(child: Text("Spot Way")),
+              const Icon(Icons.location_on),
+              Text(CurrentLocation, textAlign: TextAlign.end)
             ],
           ),
           backgroundColor: SpotColors.colorPrimary,
@@ -91,24 +102,24 @@ class _HomeScreenState extends State<HomeScreen> {
                    ), (Route<dynamic> route) => true);
 
                },
-             child:  const DrawerHeader(
-               decoration: BoxDecoration(
+             child:   DrawerHeader(
+               decoration: const BoxDecoration(
                  color: SpotColors.colorPrimary,
                ), //BoxDecoration
 
                child: UserAccountsDrawerHeader(
 
-                 decoration: BoxDecoration(color: SpotColors.colorPrimary),
+                 decoration: const BoxDecoration(color: SpotColors.colorPrimary),
                  accountName: Text(
-                   "Prins Singh",
-                   style: TextStyle(fontSize: 18),
+                   UserName,
+                   style: const TextStyle(fontSize: 18),
                  ),
-                 accountEmail: Text("prinssingh7448@gmail.com"),
-                 currentAccountPictureSize: Size.square(50),
-                 currentAccountPicture: CircleAvatar(
+                 accountEmail: Text(UserEmail),
+                 currentAccountPictureSize: const Size.square(50),
+                 currentAccountPicture:  CircleAvatar(
                    backgroundColor: SpotColors.colorPrimary,
                    child: Text(
-                     "A",
+                     UserName[0].toUpperCase(),
                      style: TextStyle(fontSize: 30.0, color: Colors.blue),
                    ), //Text
                  ),
@@ -159,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.charging_station),
-                title: const Text('Charing'),
+                title: const Text('Charging'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).pushAndRemoveUntil(
@@ -233,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.exit_to_app),
-                title: const Text('Logout'),
+                title: const Text('Exit'),
                 onTap: (){
                   Navigator.pop(context);
                   showExitPopup();},
@@ -259,10 +270,8 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                 enableFeedback: false,
                 onPressed: () {
-                  print("Home pressed00");
                   setState(() {
                     pageIndex = 0;
-                    print("Home pressed");
                   });
                 },
                 icon: pageIndex == 0
@@ -283,7 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     setState(() {
                       pageIndex = 1;
-
                     });
                   },
                   icon: const Icon(Icons.search_outlined,
@@ -324,12 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
           overlayColor: Colors.black,
 
           overlayOpacity: 0.5,
-
-          onOpen: () => print('OPENING DIAL'),
-          // action when menu opens
-          onClose: () => print('DIAL CLOSED'),
           //action when menu closes
-
 
           //shadow elevation of button
           shape: const CircleBorder(),
@@ -470,7 +473,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   _onShareData(BuildContext context) async {
     final RenderObject? box = context.findRenderObject();;
     {
@@ -510,7 +512,85 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Login()));
   }
 
+//Todo Get Current Location Address and show it to the corner At CurrentLocation variable
 
+  String? _currentAddress;
+  Position? _currentPosition;
+
+  Future<void> SetLocation()async {
+
+    await _getCurrentPosition();
+    await _getAddressFromLatLng(_currentPosition!);
+
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+        _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress = place.toString();
+        CurrentLocation = place.locality!;
+        print(_currentAddress);
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+
+  void setInitState() async{
+    UserName = await SpotSharedPref.getUserName() ?? "User Name";
+    UserEmail =  await SpotSharedPref.getUserEmail() ?? "useremail@gmail.com";
+    await SetLocation();
+    setState(() {
+
+    });
+  }
+
+
+
+  //Raw Data
   void setChargingMarkers(){
     markerModels.clear();
     markerModels.add(
@@ -586,7 +666,6 @@ class _HomeScreenState extends State<HomeScreen> {
       GoogleMapMarkerModel("FlatTire", "FlatTire Point 5", "FlatTire", const LatLng(24.5265, 81.15650)));
 
   }
-
 
 
 }

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/HomeScreen.dart';
 import 'package:spot_buy/Screens/IntroScreen.dart';
+import 'package:spot_buy/Screens/DrawerScreens/Profile/UserProfileFilling.dart';
 
 import 'LanguageScreen.dart';
 
@@ -17,7 +18,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   Widget directOpening(){
-    return (FirebaseAuth.instance.currentUser != null) ? HomeScreen() : IntroScreen();
+
+    return (FirebaseAuth.instance.currentUser != null) ? const HomeScreen() : const IntroScreen();
+
   }
 
   @override

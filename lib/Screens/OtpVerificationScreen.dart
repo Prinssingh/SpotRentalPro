@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/HomeScreen.dart';
 
+import 'DrawerScreens/Profile/UserProfileFilling.dart';
+
 class OtpVerificationScreen extends StatefulWidget {
   final String verificationID;
   const OtpVerificationScreen({Key? key, required this.verificationID}) : super(key: key);
@@ -29,7 +31,7 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       if(userCredential.user!= null){
         Navigator.push(context, CupertinoPageRoute
-          (builder: (context) => HomeScreen()
+          (builder: (context) => const UserProfileFilling()
         ));
       }
     } on FirebaseAuthException catch(ex){
@@ -42,6 +44,8 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      resizeToAvoidBottomInset: false,
       body:  Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -54,7 +58,7 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
             shape: BoxShape.circle,
           ),
           child: Image.asset(
-            'assets/images/logo.png',
+            'assets/images/OtpScreen.png',
           ),
         ),
         const Text(
@@ -89,23 +93,18 @@ class _OtpVerificationState extends State<OtpVerificationScreen> {
         ElevatedButton(
             onPressed: () {
               verifyOTP();
-              // Navigator.of(context).pushAndRemoveUntil(
-              //     MaterialPageRoute(builder: (context){
-              //       return  const HomeScreen();
-              //     }
-              //     ), (Route<dynamic> route) => false);
             },
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 51, 47, 97)),
+                  const Color.fromARGB(255, 51, 47, 97)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(26.0),
                 ),
               ),
             ),
-            child: Text("Verify")),
+            child: const Text("Verify")),
         const SizedBox(
           height: 16,
         ),

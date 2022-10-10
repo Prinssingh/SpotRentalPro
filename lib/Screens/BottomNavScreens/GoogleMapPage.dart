@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:spot_buy/Models/GoogleMapMarkerModel.dart';
+import 'package:spot_buy/Screens/BottomNavScreens/DirectionScreen.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
 
 // ignore: must_be_immutable
@@ -21,22 +22,24 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
+  _GoogleMapPageState(this.googleMapMarkers);
+
   GoogleMapController? mapController; //contrller for Google map
   LatLng showLocation = const LatLng(24.527579, 81.109152);
 
+  Set<Marker> markers = {}; // Google map markers
+
+  Set<GoogleMapMarkerModel> googleMapMarkers;// Google map locations
 
 
-  Set<Marker> markers = {};
-
-  Set<GoogleMapMarkerModel> googleMapMarkers;
 
 
-  _GoogleMapPageState(this.googleMapMarkers);
-
-  Location currentLocation = Location();
+  Location currentLocation = Location();//Current Location
+  late LatLng currentLatLang ;
 
   @override
   Widget build(BuildContext context) {
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -48,10 +51,11 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       zoomGesturesEnabled: true,
       initialCameraPosition: CameraPosition(
         target: showLocation,
-        zoom: 8.0,
+        zoom: 18.0,
       ),
       markers: markers,
-      myLocationButtonEnabled: false,
+      myLocationButtonEnabled: true,
+      myLocationEnabled: false,
       zoomControlsEnabled: false,
       mapType: MapType.normal,
       onMapCreated: (controller) {
@@ -66,25 +70,14 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   @override
   void initState() {
 
-    addMarkers();
     if (googleMapMarkers.isEmpty) {
-      getLocation();
-      //
-      // markers.add(Marker(
-      //   //add marker on google map
-      //   markerId: MarkerId(showLocation.toString()),
-      //   position: showLocation, //position of marker
-      //   infoWindow: const InfoWindow(
-      //     //popup info
-      //     title: 'Current Location',
-      //     snippet: 'My Current location',
-      //   ),
-      //   icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-      //
-      // ));
+      getCurrentLocation();
+
     } else {
       markers.clear();
       for (GoogleMapMarkerModel marker in googleMapMarkers) {
+
+        GoogleMapMarkerModel temp=marker;
         markers.add(Marker(
           //add marker on google map
             markerId: MarkerId(marker.id.toString()),
@@ -98,35 +91,43 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             icon:  BitmapDescriptor.defaultMarker ,
             //Icon for Marker
             onTap: () {
-              ShowDetails(context, marker);
+              ShowDetails(context, temp);
             }));
       }
     }
     super.initState();
   }
 
-
-
-  void getLocation() async {
+  void getCurrentLocation() async {
     var location = await currentLocation.getLocation();
     currentLocation.onLocationChanged.listen((LocationData loc) {
+      currentLatLang =LatLng(loc.latitude ?? 00, loc.longitude ?? 00);
       mapController
           ?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
         zoom: 18.0,
       )));
 
-      setState(() {
-        markers.clear();
-        markers.add(Marker(
-            markerId: MarkerId('Home'),
-            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0)));
-      });
+      currentLocation.changeSettings(accuracy: LocationAccuracy.high);
+
+      try{
+        setState(() {
+          markers.clear();
+          markers.add(Marker(
+              markerId: MarkerId('Current'),
+              position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0)));
+        });
+      }
+      on Exception{
+
+        print(Error);
+      }
+
     });
   }
 
   // ignore: non_constant_identifier_names
-  void ShowDetails(context, GoogleMapMarkerModel marker) {
+  static ShowDetails(context, GoogleMapMarkerModel marker) {
     showModalBottomSheet<dynamic>(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -147,6 +148,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
             return Column(
               children: [
+               // ListView(),
                 const SizedBox(height: 16,),
                 Text(
                   "Title :" + marker.title,
@@ -162,6 +164,13 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                 ElevatedButton.icon(
                   onPressed: () {
                     // Respond to button press
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context){
+                        //TODO
+                        return  DirectionScreen(destinationLocation: marker.position);
+                      })
+                    ,
+                      (route) => true);
                   },
                   icon: const Icon(Icons.directions, size: 26),
                   label: const Text("Direction"),
@@ -174,17 +183,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     );
   }
 
-  addMarkers() async {
-    BitmapDescriptor markerbitmap = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      "assets/images/MapPins/test.png",
-    );
-
-
-
-
 
   }
 
-
-  }

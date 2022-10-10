@@ -45,7 +45,7 @@
 
 <!--       Google Map Adding-->
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyCPQIkOBpnEKf-nVwtngtzguuLhmySF5xk"/>
+           android:value="AIzaSyC29-zotcTpy3Ed1ki4-0ro2VZ6hiARqJo"/>
 
     </application>
 </manifest>

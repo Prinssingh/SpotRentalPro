@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:spot_buy/Screens/LanguageScreen.dart';
 import 'package:spot_buy/Utils/SpotColors.dart';
+import 'package:spot_buy/Utils/SpotSharedPref.dart';
 
 import 'HomeScreen.dart';
 
@@ -103,8 +104,8 @@ class _IntroScreen extends State<IntroScreen>{
   void goHomepage(context){
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context){
-          return MaterialApp(
-              home: (FirebaseAuth.instance.currentUser != null) ? HomeScreen() : LanguageScreen(),
+          return const MaterialApp(
+              home: LanguageScreen(),
           );
         }
         ), (Route<dynamic> route) => false);
@@ -118,5 +119,11 @@ class _IntroScreen extends State<IntroScreen>{
       child: Image.asset(assetName, width: 350.0),
       alignment: Alignment.bottomCenter,
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 }

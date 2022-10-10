@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spot_buy/Screens/OtpVerificationScreen.dart';
+import 'package:spot_buy/Utils/SpotSharedPref.dart';
 
-import 'HomeScreen.dart';
 
 enum LoginScreen { SHOW_MOBILE_ENTER_WIDGET, SHOW_OTP_FORM_WIDGET }
 
@@ -26,6 +26,8 @@ class _LoginState extends State<Login> {
 
   void sendOTP() async {
     String phone = "+91" + phoneController.text.trim();
+    //Set Mobile Number to SharedPrefs
+    SpotSharedPref.setUserMobile(phone);
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phone,
         codeSent: (verificationID,resendToken) {
@@ -49,6 +51,9 @@ class _LoginState extends State<Login> {
 
 
     return Scaffold(
+      extendBody: true,
+      resizeToAvoidBottomInset: false,
+      backgroundColor:  Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -61,7 +66,7 @@ class _LoginState extends State<Login> {
               shape: BoxShape.circle,
             ),
             child: Image.asset(
-              'assets/images/logo.png',
+              'assets/images/LoginScreen2.png',
             ),
           ),
           const Text(
@@ -82,8 +87,10 @@ class _LoginState extends State<Login> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                    ),
                     hintText: "Mobile Number"),
+                style: const TextStyle(fontSize: 22),
               ),
             ),
           ),
@@ -109,7 +116,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              child: Text("Send OTP")),
+              child: const Text("Send OTP")),
           const SizedBox(
             height: 16,
           ),
